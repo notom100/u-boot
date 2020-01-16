@@ -1,0 +1,298 @@
+/*
+ * Device tree generated automatically by Digi ConnectCore Smart IOmux.
+ *
+ * This file is provided "AS IS" without any warranties and support, it is
+ * just a guideline that requires additional customization.
+ *
+ * Please verify the calculated pin assignments with the hardware reference
+ * manual for your platform, review the commented lines, and add the
+ * specific values for your hardware.
+ */
+
+/dts-v1/;
+
+/* i.MX6 UltraLite CPU */
+#include "imx6ul.dtsi"
+/* ConnectCore 6UL (wireless/bluetooth variant) */
+#include "imx6ul-ccimx6ul-wb.dtsi"
+
+/ {
+	// Add here your platform model.
+	model = "Oceantech 6UL Platform";
+	// Add here your compatible platform.
+	compatible = "digi,ccimx6ul", "fsl,imx6ul";
+	digi,machine,name = "custom";
+};
+
+&adc1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_adc1>;
+	adc-ch-list = <4>;
+	status = "okay";
+};
+
+&can1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_flexcan1>;
+
+	/*
+	 * Optional field.
+	 *
+	 * Set the proper voltage regulator to power the
+	 * transceiver if needed.
+	 */
+	xceiver-supply = <&ext_3v3>;
+
+	status = "okay";
+};
+
+&fec1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_enet1>, <&pinctrl_enet_mdio>;
+	phy-mode = "rmii";
+	phy-handle = <&ethphy1>;
+
+	/*
+	 * Optional fields.
+	 *
+	 * Configure the PHY reset with a GPIO in your design.
+	 */
+	//phy-reset-gpios = <&gpio5 6 GPIO_ACTIVE_LOW>
+	//phy-reset-duration = <26>;
+	//digi,phy-reset-in-suspend;
+
+	status = "okay";
+
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ethphy1: ethernet-phy@0 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+
+			/*
+			 * Add your custom PHY configuration.
+			 */
+			//smsc,disable-energy-detect;
+			reg = <0>;
+		};
+	};
+};
+
+&i2c2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c2>;
+
+	/* Uncomment and fill with your current scl/sda lines. */
+	//scl-gpios = <&gpio3 8 GPIO_ACTIVE_HIGH>;
+	//sda-gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+
+	status = "okay";
+
+	/*
+	 * Reference block.
+	 *
+	 * Add the peripherals connected to the I2C.
+	 */
+	//fusion_touch: fusion@14 {
+	//	compatible = "touchrev,fusion-touch";
+	//	reg = <0x14>;
+	//	pinctrl-names = "default";
+	//	pinctrl-0 = <&pinctrl_fusion_touch>;
+	//	interrupt-parent = <&gpio5>;
+	//	interrupts = <2 IRQ_TYPE_EDGE_RISING>;
+	//	status = "disabled";
+	//};
+};
+
+&mca_adc {
+	digi,adc-ch-list = <0>;
+
+	/*
+	 * ADC reference voltage. Use:
+	 *   - digi,adc-vref: Value in uV that corresponds with the VCC_MCA voltage.
+	 *   - digi,internal-vref: If present, the internal 1.2 V reference is used.
+	 *     This forces MCA_IO2/EXT_VREF to be configured as a 1.2 V output, and a
+	 *     100 nF capacitor must be placed between this line and GND.
+	 *     If this property is set, the value in 'digi,adc-vref' is ignored.
+	 */
+	digi,adc-vref = <3000000>;
+	//digi,internal-vref;
+};
+
+&pwm1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm1>;
+	status = "okay";
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
+
+	status = "okay";
+};
+
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart4>;
+
+	status = "okay";
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_console>;
+	status = "okay";
+};
+
+&usbotg1 {
+	dr_mode = "host";
+
+	/* Set the proper voltage regulator. */
+	//vbus-supply = <&reg_usb_otg1_vbus>;
+
+	/*
+	 * Configure the power line if needed.
+	 */
+	//digi,power-line-active-high;
+
+	/*
+	 * Configure the overcurrent line if needed.
+	 */
+	//disable-over-current;
+
+	status = "okay";
+};
+
+&usbotg2 {
+	dr_mode = "host";
+
+	/* Set the proper voltage regulator. */
+	//vbus-supply = <&reg_usb_otg1_vbus>;
+
+	/*
+	 * Configure the power line if needed.
+	 */
+	//digi,power-line-active-high;
+
+	/*
+	 * Configure the overcurrent line if needed.
+	 */
+	//disable-over-current;
+
+	status = "okay";
+};
+
+&usdhc2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2>;
+	broken-cd;      /* no carrier detect line (use polling) */
+	no-1-8-v;
+	status = "okay";
+};
+
+&iomuxc {
+	pinctrl-0 = <&pinctrl_hog>;
+
+	imx6ul-ccimx6ul {
+		pinctrl_adc1: adc1grp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04		0xb0
+			>;
+		};
+
+		pinctrl_console: uart5grp {
+			fsl,pins = <
+				MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX		0x1b0b1
+				MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX		0x1b0b1
+			>;
+		};
+
+		pinctrl_enet1: enet1grp {
+			fsl,pins = <
+				MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00		0x1b0b0
+				MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01		0x1b0b0
+				MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN		0x1b0b0
+				MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER		0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00		0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01		0x1b0b0
+				MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1		0x4001b031
+				MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN		0x1b0b0
+			>;
+		};
+
+		pinctrl_enet_mdio: mdioenetgrp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
+				MX6UL_PAD_GPIO1_IO06__ENET1_MDIO		0x1b0b0
+			>;
+		};
+
+		pinctrl_flexcan1: flexcan1grp {
+			fsl,pins = <
+				MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX		0x1b020
+				MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX		0x1b020
+			>;
+		};
+
+		pinctrl_hog: hoggrp {
+			fsl,pins = <
+				/* ENET1_RST */
+				MX6UL_PAD_LCD_HSYNC__GPIO3_IO02		0x10b0
+				/* ENET1_INT# */
+				MX6UL_PAD_LCD_DATA04__GPIO3_IO09		0x10b0
+				/* GPIO3_4 */
+				MX6UL_PAD_LCD_RESET__GPIO3_IO04		0x10b0
+				/* USER_BUTTON */
+				MX6UL_PAD_LCD_VSYNC__GPIO3_IO03		0x10b0
+				/* USER_LED */
+				MX6UL_PAD_LCD_DATA06__GPIO3_IO11		0x10b0
+				/* GPIO3_12 */
+				MX6UL_PAD_LCD_DATA07__GPIO3_IO12		0x10b0
+				/* GPIO3_10 */
+				MX6UL_PAD_LCD_DATA05__GPIO3_IO10		0x10b0
+				/* GPIO3_7/PWM3 */
+				MX6UL_PAD_LCD_DATA02__GPIO3_IO07		0x10b0
+			>;
+		};
+
+		pinctrl_i2c2: i2c2grp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO00__I2C2_SCL		0x4001b8b0
+				MX6UL_PAD_GPIO1_IO01__I2C2_SDA		0x4001b8b0
+			>;
+		};
+
+		pinctrl_pwm1: pwm1grp {
+			fsl,pins = <
+				MX6UL_PAD_LCD_DATA00__PWM1_OUT		0x110b0
+			>;
+		};
+
+		pinctrl_uart2: uart2grp {
+			fsl,pins = <
+				MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX		0x1b0b1
+				MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX		0x1b0b1
+			>;
+		};
+
+		pinctrl_uart4: uart4grp {
+			fsl,pins = <
+				MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX		0x1b0b1
+				MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1
+			>;
+		};
+
+		pinctrl_usdhc2: usdhc2grp {
+			fsl,pins = <
+				MX6UL_PAD_CSI_VSYNC__USDHC2_CLK		0x10039
+				MX6UL_PAD_CSI_HSYNC__USDHC2_CMD		0x17059
+				MX6UL_PAD_CSI_DATA00__USDHC2_DATA0		0x17059
+				MX6UL_PAD_CSI_DATA01__USDHC2_DATA1		0x17059
+				MX6UL_PAD_CSI_DATA02__USDHC2_DATA2		0x17059
+				MX6UL_PAD_CSI_DATA03__USDHC2_DATA3		0x17059
+			>;
+		};
+	};
+};
